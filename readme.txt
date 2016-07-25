@@ -35,5 +35,7 @@ pom.xml						---------------------------maven依赖.jar配置信息
 
 项目加载流程如上面我所描述的，再根据tomcat的日志去跟踪，很方便就可以搭建开发环境，前提是你对于spring和mybatis已经有了理论的基础!
 
-了解原理看这里http://weigu.tk/?p=91或者http://blog.sina.com.cn/s/blog_dc92a9cf0102wyqc.html
+了解原理看这里http://weigu.tk/?p=91 
+或者 
+http://blog.sina.com.cn/s/blog_dc92a9cf0102wyqc.html
 
