@@ -1,22 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" 
-xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
 http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 http://www.springframework.org/schema/context
-http://www.springframework.org/schema/context/spring-context-3.0.xsd
-http://www.springframework.org/schema/tx 
-http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-http://www.springframework.org/schema/aop 
-http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+http://www.springframework.org/schema/context/spring-context-4.2.xsd
+
+http://www.springframework.org/schema/task  
+http://www.springframework.org/schema/task/spring-task-3.2.xsd  
+
 ">
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename">
+            <!-- 定义消息资源文件的相对路径 -->
+            <value>code_msg/message</value>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="true" />
+    </bean>
+
+
+	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+		<property name="locations"> <list> <value>classpath:config.properties</value> 
+		<value>classpath:redis.properties</value> </list> </property> </bean> -->
+
+	<!-- <task:annotation-driven/> -->
+	<!-- executor线程池，含义和java.util.concurrent.Executor是一样的,pool-size的大小官方推荐为5~10 -->
+	<task:executor id="executor" pool-size="5" />
+	<!-- scheduler的pool-size是ScheduledExecutorService线程池，默认为1 -->
+	<task:scheduler id="scheduler" pool-size="5" />
+	<task:annotation-driven executor="executor"
+		scheduler="scheduler" />
 
 	<!-- 引入属性文件 -->
 	<context:property-placeholder location="classpath:config.properties" />
+	<!-- <context:property-placeholder location="file:D:/src/game_invited/program/trunk/GameInvite/src/main/resources/config.properties" 
+		/> -->
 
 	<!-- 自动扫描(自动注入) -->
-	<context:component-scan base-package="ssm.service" />
-	<context:component-scan base-package="ssm.controller" />
-	
+	<context:component-scan base-package="com.dsky.baas.gameinvite.service" />
+
+
+
+	<!-- 加载redis配置文件 -->
+	<!-- redis连接池的配置 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="${redis.pool.maxActive}" />
+		<property name="maxIdle" value="${redis.pool.maxIdle}" />
+		<property name="minIdle" value="${redis.pool.minIdle}" />
+		<property name="maxWaitMillis" value="${redis.pool.maxWait}" />
+		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
+		<property name="testOnReturn" value="${redis.pool.testOnReturn}" />
+	</bean>
+
+	<!-- redis的连接池pool，不是必选项：timeout/password -->
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1" value="${redis.host}" type="java.lang.String" />
+		<constructor-arg index="2" value="${redis.port}" type="int" />
+		<constructor-arg index="3" value="10000" type="int" />
+		<!-- <constructor-arg index="4" value="" /> -->
+	</bean>
+
+	<!-- RMI server
+	<bean id="gameInviteRMI" class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="serviceName" value="gameInviteRMIService" />
+		<property name="service" ref="gameInviteRMIService" />
+		<property name="registryHost" value="192.168.3.165" />
+		<property name="serviceInterface"
+			value="com.dsky.baas.gameinvite.service.IGameInviteRMIService" />
+	</bean>
+	 -->
+	<!-- RMI client -->
+	<!-- <bean id="mobileAccountService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean"> 
+		<property name="serviceUrl" value="rmi://192.168.119.99/gameInviteRMIService" 
+		/> <property name="serviceInterface" value="com.dsky.baas.gameinvite.service.IGameInviteRMIService" 
+		/> </bean> -->
+		
+	<!-- RMI client to config server -->
+	<bean id="configServerRMIServiceClient" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${RMI.client.configServerRMIService.serviceUrl}" />
+		<property name="serviceInterface" value="com.dsky.baas.configservice.rmi.IGameConfig" />
+		<property name="refreshStubOnConnectFailure" value="true" />
+		<property name="lookupStubOnStartup" value="false" />
+	</bean>
+
+	<!-- RMI client to points server -->
+	<bean id="pointsServerRMIServiceClient" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+		<property name="serviceUrl"
+			value="${RMI.client.pointsServerRMIService.serviceUrl}" />
+		<property name="serviceInterface" value="com.dsky.baas.pointsservice.rmi.IPointsPoolService" />
+		<property name="refreshStubOnConnectFailure" value="true" />
+		<property name="lookupStubOnStartup" value="false" />
+	</bean>
 
 </beans>
