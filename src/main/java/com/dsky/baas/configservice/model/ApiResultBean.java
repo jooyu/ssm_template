@@ -2,8 +2,9 @@ package com.dsky.baas.configservice.model;
 
 import java.io.Serializable;
 
+//RMI发送对象数据，实现序列化！！
 public class ApiResultBean implements Serializable{
-	//RMI发送对象数据，实现序列化
+	
 	    private static final long serialVersionUID = 7259584042890356969L;
 		//访问状态码
 		private Integer code ;

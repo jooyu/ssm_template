@@ -1,6 +1,6 @@
 package com.dsky.baas.pointsservice.rmi;
 
-
+//你调用的人接口
 public interface IPointsPoolService {
 
 	/**
