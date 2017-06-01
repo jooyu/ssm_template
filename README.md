@@ -6,7 +6,7 @@
 
 
 
-spring+springmvc+mybatis的配置模板，简单容易上手，再也不用为搭建环境犯愁，开源给大家，附一份文档说明
+# spring+springmvc+mybatis的配置模板，简单容易上手，再也不用为搭建环境犯愁，开源给大家，附一份文档说明
 
 从零配置安装SpringMVC+Spring+Mybatis
 
