@@ -1,7 +1,7 @@
 # ssm_template
 
 
-2017.6.1    更新 
+# 2017.6.1    更新 
 推荐使用springboo,省去xml配置烦恼 https://github.com/rainzhu/springbootdemo
 
 
