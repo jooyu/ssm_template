@@ -80,4 +80,4 @@ pom.xml                                                          ---------------
 
 在我走完整个流程之后，我发现spring，springmvc和mybatis是通过xml文件联系起来的，也就是说理解项目中的4个xml文件对你加深spring架构的理解有一定的帮助。
 
- github源码地址 https://github.com/rainzhu/ssm_template.git，觉得不错记得给star哦
+ github源码地址 https://github.com/jooyu/ssm_template.git，觉得不错记得给star哦
